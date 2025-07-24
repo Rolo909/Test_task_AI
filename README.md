@@ -77,7 +77,7 @@
 graph LR
     A[Telegram] --> B[N8N]
     B --> C[Flask API]
-    C --> D[Deepseek R1 0528 Qwen3 8B (free)]
+    C --> D[Deepseek R1 0528 Qwen3 8B free]
     D --> C
     C --> B
     B --> A
