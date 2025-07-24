@@ -1,0 +1,160 @@
+{
+  "name": "Text analysis AI",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "6c89c99a-1fc6-429c-a5f5-b078b9397334",
+      "name": "Telegram Trigger",
+      "webhookId": "fc2c6f96-8b95-495e-bf1c-6561e5c23b9c",
+      "credentials": {
+        "telegramApi": {
+          "id": "d8T9I16YcQxfYtEf",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://b25586c7a707.ngrok-free.app/analyze",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "={{ $json.message.from.id }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.message.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        0
+      ],
+      "id": "1cc1e520-11f2-4ee0-9b1c-8dea836d2dba",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "=Тон: {{ $json.tone }}. Рекомендация: {{ $json.recommendations }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        528,
+        0
+      ],
+      "id": "633a3068-5ebe-4e34-a66f-a5da495492ce",
+      "name": "Send a text message",
+      "webhookId": "4fbb0999-3bd7-47bf-b680-22d0f777d7cc",
+      "credentials": {
+        "telegramApi": {
+          "id": "d8T9I16YcQxfYtEf",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d6780034-e729-415f-90dd-cce8bd2e8748",
+              "name": "message.from.id",
+              "value": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+              "type": "number"
+            },
+            {
+              "id": "86d92ae4-0d4e-4a66-bbc6-436c7f5c3bb4",
+              "name": "tone",
+              "value": "={{ $json.tone }}",
+              "type": "string"
+            },
+            {
+              "id": "a8316b46-e3e8-421e-bcf2-accfa404e2e6",
+              "name": "recommendations",
+              "value": "={{ $json.recommendations }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        0
+      ],
+      "id": "8a09d61f-cfc7-466b-b026-0089b895ff4c",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "70e29237-1834-48db-a3a2-f059bb52b480",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c5726a1130390ee12a4f7aa5d2a37f2a5f1131ee802c8e6ce1b23a85be3926a2"
+  },
+  "id": "8JKeF4CqFQX683Zu",
+  "tags": []
+}
